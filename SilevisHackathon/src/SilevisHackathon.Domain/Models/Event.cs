@@ -5,8 +5,10 @@ public class Event
     public int Id { get; set; }
     public string Name { get; set; }
     public int LocationId { get; set; }
+    public Location Location { get; set; }
     public int Team1 { get; set; }
     public int Team2 { get; set; }
     public DateTime Date { get; set; }
-    
+    public ICollection<Message> Messages { get; set; }
+
 }

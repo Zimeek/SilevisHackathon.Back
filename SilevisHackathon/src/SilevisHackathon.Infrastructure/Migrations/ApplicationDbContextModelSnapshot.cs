@@ -48,6 +48,9 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId")
+                        .IsUnique();
+
                     b.ToTable("Events");
                 });
 
@@ -69,7 +72,7 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Message", b =>
@@ -88,17 +91,25 @@ namespace SilevisHackathon.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("EventId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TeamId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages");
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
@@ -121,11 +132,12 @@ namespace SilevisHackathon.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TeamId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("People");
                 });
@@ -147,7 +159,77 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Teams", (string)null);
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Event", b =>
+                {
+                    b.HasOne("SilevisHackathon.Domain.Models.Location", "Location")
+                        .WithOne("Event")
+                        .HasForeignKey("SilevisHackathon.Domain.Models.Event", "LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Message", b =>
+                {
+                    b.HasOne("SilevisHackathon.Domain.Models.Event", "Event")
+                        .WithMany("Messages")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SilevisHackathon.Domain.Models.Person", "Person")
+                        .WithMany("Messages")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SilevisHackathon.Domain.Models.Team", "Team")
+                        .WithMany("Messages")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
+                {
+                    b.HasOne("SilevisHackathon.Domain.Models.Team", "Team")
+                        .WithMany("People")
+                        .HasForeignKey("TeamId");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Event", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Location", b =>
+                {
+                    b.Navigation("Event")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Team", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("People");
                 });
 #pragma warning restore 612, 618
         }
