@@ -1,3 +1,5 @@
+using System.Reflection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SilevisHackathon.Infrastructure.Data;
 
@@ -12,6 +14,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddMediatR(typeof(SilevisHackathon.Application.Queries.GetAllEventsQuery));
+
 
 var app = builder.Build();
 
