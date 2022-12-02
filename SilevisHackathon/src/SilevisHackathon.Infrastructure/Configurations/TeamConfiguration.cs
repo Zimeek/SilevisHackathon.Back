@@ -15,5 +15,9 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
             .HasMany(t => t.People)
             .WithOne(p => p.Team)
             .HasForeignKey(p => p.TeamId);
+
+        builder.HasOne(t => t.Event)
+            .WithMany(e => e.Teams)
+            .HasForeignKey(t => t.EventId);
     }
 }
