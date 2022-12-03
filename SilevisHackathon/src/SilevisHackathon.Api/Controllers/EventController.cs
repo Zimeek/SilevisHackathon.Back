@@ -27,6 +27,13 @@ namespace SilevisHackathon.Api.Controllers
             var events = await _mediator.Send(new GetAllEventsQuery.Query());
             return Ok(events.Adapt<ICollection<EventDto>>());
         }
+        
+        [HttpGet("ByLocation/{id:int}")]
+        public async Task<IActionResult> GetAllEventsByLocationIdAsync(int id)
+        {
+            var events = await _mediator.Send(new GetAllEventsByLocationIdQuery.Query(id));
+            return Ok(events.Adapt<ICollection<EventDto>>());
+        }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetEventByIdAsync(int id)
