@@ -38,6 +38,14 @@ namespace SilevisHackathon.Api.Controllers
             return Ok(eventt.Adapt<EventDto>());
         }
         
+        [HttpGet("{id:int}/Teams")]
+        public async Task<IActionResult> GetEventTeamsByEventId(int id)
+        {
+            var teams = await _mediator.Send(new GetEventTeamsByEventIdQuery.Query(id));
+            
+            return Ok(teams.Adapt<ICollection<TeamDto>>());
+        }
+        
         [HttpPost]
         public async Task<IActionResult> CreateEventAsync([FromBody]CreateEventHttpRequest request)
         {
@@ -48,9 +56,16 @@ namespace SilevisHackathon.Api.Controllers
         }
 
         [HttpPost("AddTeam")]
-        public async Task<IActionResult> AddTeamToEventAsync([FromBody] AddTeamToEventHttpRequest request)
+        public async Task<IActionResult> AddTeamToEventAsync([FromBody]AddTeamToEventHttpRequest request)
         {
             return Ok(await _mediator.Send(new AddTeamToEventCommand.Command(request)));
+        }
+
+        [HttpDelete("RemoveTeam")]
+        public async Task<IActionResult> RemoveTeamFromEventAsync([FromBody]RemoveTeamFromEventHttpRequest request)
+        {
+            var updatedEvent = await _mediator.Send(new RemoveTeamFromEventCommand.Command(request));
+            return Ok(updatedEvent.Adapt<EventDto>());
         }
     }
 }
