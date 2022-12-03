@@ -21,6 +21,7 @@ public static class CreateTeamMessageCommand
         public async Task<TeamMessage> Handle(Command command, CancellationToken cancellationToken)
         {
             var message = new TeamMessage(command.request.Content, command.authorId, command.request.TeamId);
+            
             await _dbContext.TeamMessages.AddAsync(message, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 

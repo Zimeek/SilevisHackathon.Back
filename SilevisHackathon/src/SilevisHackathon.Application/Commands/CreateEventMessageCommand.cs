@@ -22,6 +22,7 @@ public static class CreateEventMessageCommand
         public async Task<EventMessage> Handle(Command command, CancellationToken cancellationToken)
         {
             var message = new EventMessage(command.request.Content, command.authorId, command.request.EventId);
+            
             await _dbContext.EventMessages.AddAsync(message, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 

@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SilevisHackathon.Application.HttpRequests;
@@ -23,6 +24,9 @@ public static class AddTeamToEventCommand
         {
             var eventt = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == command.request.EventId, cancellationToken);
             var team = await _dbContext.Teams.FirstOrDefaultAsync(t => t.Id == command.request.TeamId, cancellationToken);
+
+            Guard.Against.Null(eventt, nameof(eventt));
+            Guard.Against.Null(team, nameof(team));
             
             eventt.Teams.Add(team);
             await _dbContext.SaveChangesAsync(cancellationToken);

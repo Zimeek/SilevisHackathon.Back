@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SilevisHackathon.Application.HttpRequests;
 using SilevisHackathon.Domain.Models;
 using SilevisHackathon.Infrastructure.Data;
+using Ardalis.GuardClauses;
 
 namespace SilevisHackathon.Application.Commands;
 
@@ -23,6 +24,9 @@ public static class AddPersonToTeamCommand
         {
             var person = await _dbContext.People.FirstOrDefaultAsync(p => p.Id == command.request.PersonId, cancellationToken);
             var team = await _dbContext.Teams.FirstOrDefaultAsync(t => t.Id == command.request.TeamId, cancellationToken);
+
+            Guard.Against.Null(person, nameof(person));
+            Guard.Against.Null(team, nameof(team));
             
             team.People.Add(person);
             await _dbContext.SaveChangesAsync(cancellationToken);

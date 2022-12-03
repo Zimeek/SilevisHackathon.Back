@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SilevisHackathon.Application.HttpRequests;
@@ -21,10 +22,13 @@ public static class RemoveTeamFromEventCommand
         
         public async Task<Event> Handle(Command command, CancellationToken cancellationToken)
         {
-            var eventt = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == command.request.EventId);
+            var eventt = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == command.request.EventId, cancellationToken: cancellationToken);
+
+            Guard.Against.Null(eventt, nameof(eventt));
+            
             eventt.Teams.RemoveAll(t => t.Id == command.request.TeamId);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return eventt;
         }
