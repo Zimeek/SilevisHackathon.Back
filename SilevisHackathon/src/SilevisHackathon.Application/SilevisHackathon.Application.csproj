@@ -12,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands" />
     <Folder Include="Commands\" />
-    <Folder Include="HttpRequests" />
     <Folder Include="Queries\" />
   </ItemGroup>
 

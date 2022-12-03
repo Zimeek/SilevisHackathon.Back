@@ -20,7 +20,9 @@ public static class GetEventByIdQuery
 
         public async Task<Event> Handle(Query request, CancellationToken cancellationToken)
         {
-            return await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == request.eventId);
+            return await _dbContext.Events
+                .Include(e => e.Location)
+                .FirstOrDefaultAsync(e => e.Id == request.eventId);
         }
     }
 }

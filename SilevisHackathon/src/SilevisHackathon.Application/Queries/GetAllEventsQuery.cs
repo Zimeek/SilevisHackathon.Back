@@ -22,8 +22,7 @@ public static class GetAllEventsQuery
         public async Task<ICollection<Event>> Handle(Query request, CancellationToken cancellationToken)
         {
             return await _dbContext.Events
-                .Include(e => e.Teams)
-                .ThenInclude(t => t.People)
+                .Include(e => e.Location)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }
