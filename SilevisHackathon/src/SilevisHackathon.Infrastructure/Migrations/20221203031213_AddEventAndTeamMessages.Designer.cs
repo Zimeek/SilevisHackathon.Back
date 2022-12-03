@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SilevisHackathon.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SilevisHackathon.Infrastructure.Data;
 namespace SilevisHackathon.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221203031213_AddEventAndTeamMessages")]
+    partial class AddEventAndTeamMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,25 +53,13 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.EventMessage", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("MessageId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
+                    b.HasKey("MessageId", "EventId");
 
                     b.HasIndex("EventId");
 
@@ -94,6 +85,31 @@ namespace SilevisHackathon.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations", (string)null);
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
@@ -161,25 +177,13 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.TeamMessage", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("MessageId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
+                    b.HasKey("MessageId", "TeamId");
 
                     b.HasIndex("TeamId");
 
@@ -199,21 +203,32 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.EventMessage", b =>
                 {
-                    b.HasOne("SilevisHackathon.Domain.Models.Person", "Author")
-                        .WithMany("EventMessages")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SilevisHackathon.Domain.Models.Event", "Event")
                         .WithMany("Messages")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.HasOne("SilevisHackathon.Domain.Models.Message", "Message")
+                        .WithMany("EventMessages")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Event");
+
+                    b.Navigation("Message");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Message", b =>
+                {
+                    b.HasOne("SilevisHackathon.Domain.Models.Person", "Person")
+                        .WithMany("Messages")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
@@ -236,9 +251,9 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.TeamMessage", b =>
                 {
-                    b.HasOne("SilevisHackathon.Domain.Models.Person", "Author")
+                    b.HasOne("SilevisHackathon.Domain.Models.Message", "Message")
                         .WithMany("TeamMessages")
-                        .HasForeignKey("AuthorId")
+                        .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -248,7 +263,7 @@ namespace SilevisHackathon.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.Navigation("Message");
 
                     b.Navigation("Team");
                 });
@@ -266,11 +281,16 @@ namespace SilevisHackathon.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Message", b =>
                 {
                     b.Navigation("EventMessages");
 
                     b.Navigation("TeamMessages");
+                });
+
+            modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Team", b =>

@@ -22,7 +22,8 @@ public class Person
     public string PasswordHash { get; set; }
     public int? TeamId { get; set; }
     public Team? Team { get; set; }
-    public ICollection<Message> Messages { get; set; } = new List<Message>();
+    public ICollection<EventMessage> EventMessages { get; set; } = new List<EventMessage>();
+    public ICollection<TeamMessage> TeamMessages { get; set; } = new List<TeamMessage>();
 
 }
 

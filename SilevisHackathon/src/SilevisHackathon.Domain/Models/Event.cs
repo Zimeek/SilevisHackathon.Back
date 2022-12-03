@@ -16,6 +16,6 @@ public class Event
     public Location Location { get; set; }
     public List<Team> Teams { get; set; } = new List<Team>();
     public DateTime Date { get; set; }
-    public ICollection<Message> Messages { get; set; } = new List<Message>();
+    public ICollection<EventMessage> Messages { get; set; } = new List<EventMessage>();
 
 }

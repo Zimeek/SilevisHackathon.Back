@@ -21,5 +21,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Event> Events { get; set; }
     public DbSet<Person> People { get; set; }
     public DbSet<Team> Teams { get; set; }
-    public DbSet<Message> Messages { get; set; }
+    public DbSet<TeamMessage> TeamMessages { get; set; }
+    public DbSet<EventMessage> EventMessages { get; set; }
 }
