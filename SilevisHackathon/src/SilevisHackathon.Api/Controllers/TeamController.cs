@@ -21,6 +21,14 @@ namespace SilevisHackathon.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllTeamsAsync()
+        {
+            var teams = await _mediator.Send(new GetAllTeamsQuery.Query());
+
+            return Ok(teams.Adapt<ICollection<TeamDto>>());
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetTeamByIdAsync(int id)
         {
@@ -45,7 +53,8 @@ namespace SilevisHackathon.Api.Controllers
         [HttpPost("AddPerson")]
         public async Task<IActionResult> AddPersonToTeamAsync([FromBody] AddPersonToTeamHttpRequest request)
         {
-            return Ok(await _mediator.Send(new AddPersonToTeamCommand.Command(request)));
+            var updatedTeam = await _mediator.Send(new AddPersonToTeamCommand.Command(request));
+            return Ok(updatedTeam.Adapt<TeamDto>());
         }
     }
 }
