@@ -5,11 +5,11 @@ using SilevisHackathon.Infrastructure.Data;
 
 namespace SilevisHackathon.Application.Queries;
 
-public class GetUpcomingEventsQuery
+public static class GetUpcomingEventsQuery
 {
     public record Query() : IRequest<ICollection<Event>>;
 
-    public class Handler : IRequestHandler<GetAllEventsQuery.Query, ICollection<Event>>
+    public class Handler : IRequestHandler<Query, ICollection<Event>>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -18,7 +18,7 @@ public class GetUpcomingEventsQuery
             _dbContext = dbContext;
         }
 
-        public async Task<ICollection<Event>> Handle(GetAllEventsQuery.Query request, CancellationToken cancellationToken)
+        public async Task<ICollection<Event>> Handle(Query request, CancellationToken cancellationToken)
         {
             return await _dbContext.Events
                 .Include(e => e.Location)
