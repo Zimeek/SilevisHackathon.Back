@@ -5,11 +5,11 @@ using SilevisHackathon.Infrastructure.Data;
 
 namespace SilevisHackathon.Application.Queries;
 
-public static class GetUserByNameQuery
+public static class GetUserByNameOrEmailQuery
 {
-    public record Query(string name) : IRequest<Person>;
+    public record Query(string name, string email) : IRequest<Person>;
 
-    public class Handler : IRequestHandler<GetUserByNameQuery.Query, Person>
+    public class Handler : IRequestHandler<GetUserByNameOrEmailQuery.Query, Person>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -18,9 +18,9 @@ public static class GetUserByNameQuery
             _dbContext = dbContext;
         }
 
-        public async Task<Person> Handle(GetUserByNameQuery.Query request, CancellationToken cancellationToken)
+        public async Task<Person> Handle(GetUserByNameOrEmailQuery.Query request, CancellationToken cancellationToken)
         {
-            return await _dbContext.People.FirstOrDefaultAsync(e => e.NickName == request.name);
+            return await _dbContext.People.FirstOrDefaultAsync(e => e.NickName == request.name || e.Email == request.email);
         }
     }   
 }

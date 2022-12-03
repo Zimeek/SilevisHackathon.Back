@@ -5,11 +5,13 @@ public class Person
 {
     private Person() {}
 
-    public Person(string nickName, string fistName, string lastName)
+    public Person(string nickName, string fistName, string lastName, string password, string email)
     {
         NickName = nickName;
         FirstName = fistName;
         LastName = lastName;
+        PasswordHash = BC.BCrypt.HashPassword(password);
+        Email = email;
     }
     
     public int Id { get; set; }
