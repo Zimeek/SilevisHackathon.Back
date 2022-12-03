@@ -35,6 +35,13 @@ namespace SilevisHackathon.Api.Controllers
             return Ok(events.Adapt<ICollection<EventDto>>());
         }
 
+        [HttpGet("Upcoming")]
+        public async Task<IActionResult> GetUpcomingEventsAsync()
+        {
+            var events = await _mediator.Send(new GetUpcomingEventsQuery.Query());
+            return Ok(events.Adapt<ICollection<EventDto>>());
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetEventByIdAsync(int id)
         {
