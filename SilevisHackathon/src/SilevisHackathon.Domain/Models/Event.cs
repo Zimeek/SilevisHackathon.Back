@@ -4,10 +4,11 @@ public class Event
 {
     private Event() {}
 
-    public Event(string name, int locationId)
+    public Event(string name, int locationId, DateTime date)
     {
         Name = name;
         LocationId = locationId;
+        Date = date;
     }
     
     public int Id { get; set; }

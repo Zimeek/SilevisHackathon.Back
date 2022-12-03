@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SilevisHackathon.Api.DTOs;
 using SilevisHackathon.Application.Commands;
@@ -8,6 +9,7 @@ using SilevisHackathon.Application.Queries;
 
 namespace SilevisHackathon.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamController : ControllerBase

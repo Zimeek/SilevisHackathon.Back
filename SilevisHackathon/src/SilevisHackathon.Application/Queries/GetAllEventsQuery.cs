@@ -23,6 +23,7 @@ public static class GetAllEventsQuery
         {
             return await _dbContext.Events
                 .Include(e => e.Location)
+                .Where(e => e.Date > DateTime.UtcNow)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }

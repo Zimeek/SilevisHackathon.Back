@@ -4,4 +4,5 @@ public record CreateEventHttpRequest
 {
     public string Name { get; init; }
     public int LocationId { get; init; }
+    public DateTime Date { get; init; }
 }
