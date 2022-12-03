@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SilevisHackathon.Domain.Models;
@@ -12,8 +13,8 @@ using BC = BCrypt.Net;
 
 namespace SilevisHackathon.Api.Controllers;
 
-[ApiController]
 [Route("api/[controller]")]
+[ApiController]
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
@@ -38,6 +39,7 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
     
+    [EnableCors("_localorigin")]
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] CreatePersonHttpRequest request){
         Person person = await _mediator.Send(new GetUserByEmailQuery.Query(request.Email));
@@ -50,7 +52,7 @@ public class AuthController : ControllerBase
         return Conflict();
     }
 
-    public string GenerateJwtToken(int id, string email)
+    private string GenerateJwtToken(int id, string email)
     {
         var issuer = _configuration["jwt:issuer"];
         var audience = _configuration["jwt:audience"];

@@ -15,7 +15,7 @@ public class Event
     public int LocationId { get; set; }
     public Location Location { get; set; }
     public List<Team> Teams { get; set; } = new List<Team>();
-    public DateTime Date { get; set; }
+    public DateTime Date { get; set; } = DateTime.UtcNow;
     public ICollection<EventMessage> Messages { get; set; } = new List<EventMessage>();
 
 }

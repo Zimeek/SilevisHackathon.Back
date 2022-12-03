@@ -40,10 +40,9 @@ public static class ServiceCollectionExtensions
         {
             options.AddPolicy("_localorigin", builder =>
             {
-                builder.WithOrigins("http://localhost:4200");
+                builder.AllowAnyOrigin();
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
-                builder.AllowCredentials();
             });
         });
 

@@ -12,8 +12,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.ToTable("Locations");
 
         builder
-            .HasOne(l => l.Event)
+            .HasMany(l => l.Events)
             .WithOne(e => e.Location)
-            .HasForeignKey<Event>(e => e.LocationId);
+            .HasForeignKey(e => e.LocationId);
     }
 }

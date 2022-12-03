@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SilevisHackathon.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SilevisHackathon.Infrastructure.Data;
 namespace SilevisHackathon.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221203044547_UpdatePerson")]
+    partial class UpdatePerson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,8 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("LocationId")
+                        .IsUnique();
 
                     b.ToTable("Events");
                 });
@@ -184,8 +188,8 @@ namespace SilevisHackathon.Infrastructure.Migrations
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Event", b =>
                 {
                     b.HasOne("SilevisHackathon.Domain.Models.Location", "Location")
-                        .WithMany("Events")
-                        .HasForeignKey("LocationId")
+                        .WithOne("Event")
+                        .HasForeignKey("SilevisHackathon.Domain.Models.Event", "LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -257,7 +261,8 @@ namespace SilevisHackathon.Infrastructure.Migrations
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Location", b =>
                 {
-                    b.Navigation("Events");
+                    b.Navigation("Event")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SilevisHackathon.Domain.Models.Person", b =>

@@ -15,5 +15,5 @@ public class Location
     public string Name { get; set; }
     public string Address { get; set; }
     [JsonIgnore]
-    public Event Event { get; set; }
+    public ICollection<Event> Events { get; set; }
 }
