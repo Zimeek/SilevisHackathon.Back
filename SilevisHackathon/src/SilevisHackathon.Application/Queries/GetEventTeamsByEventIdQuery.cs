@@ -5,11 +5,11 @@ using SilevisHackathon.Infrastructure.Data;
 
 namespace SilevisHackathon.Application.Queries;
 
-public static class GetTeamByIdQuery
+public static class GetEventTeamsByEventIdQuery
 {
-    public record Query(int teamId) : IRequest<Team>;
-
-    public class Handler : IRequestHandler<Query, Team>
+    public record Query(int eventId) : IRequest<ICollection<Team>>;
+    
+    public class Handler: IRequestHandler<Query, ICollection<Team>>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -17,11 +17,14 @@ public static class GetTeamByIdQuery
         {
             _dbContext = dbContext;
         }
-        public async Task<Team> Handle(Query request, CancellationToken cancellationToken)
+        
+        public async Task<ICollection<Team>> Handle(Query request, CancellationToken cancellationToken)
         {
             return await _dbContext.Teams
                 .Include(t => t.People)
-                .FirstOrDefaultAsync(t => t.Id == request.teamId);
+                .Where(t => t.EventId == request.eventId)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken: cancellationToken);
         }
     }
 }

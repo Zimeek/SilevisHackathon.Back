@@ -28,7 +28,7 @@ namespace SilevisHackathon.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(team.Adapt<ICollection<TeamDto>>());
+            return Ok(team.Adapt<TeamDto>());
         }
 
         [HttpPost]

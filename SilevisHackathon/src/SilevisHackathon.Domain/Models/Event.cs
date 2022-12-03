@@ -14,7 +14,7 @@ public class Event
     public string Name { get; set; }
     public int LocationId { get; set; }
     public Location Location { get; set; }
-    public ICollection<Team> Teams { get; set; } = new List<Team>();
+    public List<Team> Teams { get; set; } = new List<Team>();
     public DateTime Date { get; set; }
     public ICollection<Message> Messages { get; set; } = new List<Message>();
 
