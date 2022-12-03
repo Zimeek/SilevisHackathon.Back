@@ -16,9 +16,10 @@ public static class ApplicationDbContextSeeder
         {
             var locations = new List<Location>
             {
-                new Location("FIFA World Cup Qatar 2022 1", "Al Bayt Stadium"),
-                new Location("FIFA World Cup Qatar 2022 2", "Ahmad Bin Ali Stadium"),
-                new Location("FIFA World Cup Qatar 2022 3", "Al Janoub Stadium")
+                new Location("Żytnia Hala", "Kielce"),
+                new Location("KSM Szkoła", "Kielce"),
+                new Location("Zagórska Pole", "Kielce"),
+                new Location("Śródmieście Boisko", "Kielce")
             };
 
             await dbContext.Locations.AddRangeAsync(locations);
