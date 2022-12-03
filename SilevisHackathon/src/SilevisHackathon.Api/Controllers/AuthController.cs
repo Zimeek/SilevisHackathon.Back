@@ -34,30 +34,30 @@ public class AuthController : ControllerBase
             return Forbid();
         if (BC.BCrypt.Verify(request.Password, person.PasswordHash))
         {
-            string token = GenerateJwtToken(person);
+            string token = await GenerateJwtToken(person);
             return Ok(token);
         }
         return Forbid();
     }
     
-    [EnableCors("_localorigin")]
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] CreatePersonHttpRequest request){
         Person person = await _mediator.Send(new GetUserByEmailQuery.Query(request.Email));
         if (person is null)
         {
             Person newUser = await _mediator.Send(new CreatePersonCommand.Command(request));
-            string token = GenerateJwtToken(newUser);
+            string token = await GenerateJwtToken(newUser);
             return Ok(token);
         }
         return Conflict();
     }
 
-    private string GenerateJwtToken(Person person)
+    private async Task<string> GenerateJwtToken(Person person)
     {
         var issuer = _configuration["jwt:issuer"];
         var audience = _configuration["jwt:audience"];
         var key = Encoding.ASCII.GetBytes(_configuration["jwt:key"]);
+        bool isCaptain = await IsCaptain(person);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
@@ -66,6 +66,7 @@ public class AuthController : ControllerBase
                 new Claim("Id", person.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, person.Email),
                 new Claim("TeamId", person.TeamId.ToString()),
+                new Claim("isCaptain", Convert.ToInt32(isCaptain).ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti,
                     Guid.NewGuid().ToString())
             }),
@@ -79,5 +80,13 @@ public class AuthController : ControllerBase
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+    
+    private async Task<bool> IsCaptain(Person person)
+    {
+        if(person.TeamId is null) return false;
+        Team team = await _mediator.Send(new GetTeamByIdQuery.Query(person.TeamId));
+        if (person.Id == team.CaptainId) return true;
+        return false;
     }
 }

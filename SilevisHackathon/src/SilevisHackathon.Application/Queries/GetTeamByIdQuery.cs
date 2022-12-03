@@ -7,7 +7,7 @@ namespace SilevisHackathon.Application.Queries;
 
 public static class GetTeamByIdQuery
 {
-    public record Query(int teamId) : IRequest<Team>;
+    public record Query(int? teamId) : IRequest<Team>;
 
     public class Handler : IRequestHandler<Query, Team>
     {
