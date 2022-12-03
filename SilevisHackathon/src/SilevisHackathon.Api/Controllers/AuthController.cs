@@ -30,13 +30,14 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginHttpRequest request)
     {
         Person person = await _mediator.Send(new GetUserByEmailQuery.Query(request.Email));
-        if (person is null) return Unauthorized();
+        if (person is null) 
+            return Forbid();
         if (BC.BCrypt.Verify(request.Password, person.PasswordHash))
         {
             string token = GenerateJwtToken(person.Id, person.Email);
             return Ok(token);
         }
-        return Unauthorized();
+        return Forbid();
     }
     
     [EnableCors("_localorigin")]
