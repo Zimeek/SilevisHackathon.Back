@@ -20,7 +20,7 @@ public static class CreatePersonCommand
         
         public async Task<Person> Handle(Command command, CancellationToken cancellationToken)
         {
-            var newPerson = new Person(command.request.NickName, command.request.FirstName,
+            var newPerson = new Person(command.request.FirstName,
                 command.request.LastName, command.request.Password, command.request.Email);
 
             await _dbContext.People.AddAsync(newPerson, cancellationToken);
