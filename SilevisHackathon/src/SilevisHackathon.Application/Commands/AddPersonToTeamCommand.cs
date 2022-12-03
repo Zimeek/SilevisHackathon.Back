@@ -23,12 +23,18 @@ public static class AddPersonToTeamCommand
         public async Task<Team> Handle(Command command, CancellationToken cancellationToken)
         {
             var person = await _dbContext.People.FirstOrDefaultAsync(p => p.Id == command.request.PersonId, cancellationToken);
-            var team = await _dbContext.Teams.FirstOrDefaultAsync(t => t.Id == command.request.TeamId, cancellationToken);
+            var team = await _dbContext.Teams
+                .Include(t => t.People)
+                .FirstOrDefaultAsync(t => t.Id == command.request.TeamId, cancellationToken);
 
             Guard.Against.Null(person, nameof(person));
             Guard.Against.Null(team, nameof(team));
+
+            if (!team.People.Any(p => p.Id == person.Id))
+            {
+                team.People.Add(person);    
+            }
             
-            team.People.Add(person);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return team;
