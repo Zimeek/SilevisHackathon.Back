@@ -22,6 +22,7 @@ public class GetAllEventsByLocationIdQuery
         {
             return await _dbContext.Events
                 .Include(e => e.Location)
+                .Include(e => e.Teams)
                 .Where(e => e.Date > DateTime.UtcNow && e.LocationId == request.locationId)
                 .OrderByDescending(e => e.Date)
                 .AsNoTracking()

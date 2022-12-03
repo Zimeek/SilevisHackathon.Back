@@ -75,7 +75,8 @@ namespace SilevisHackathon.Api.Controllers
         [HttpPost("AddTeam")]
         public async Task<IActionResult> AddTeamToEventAsync([FromBody]AddTeamToEventHttpRequest request)
         {
-            return Ok(await _mediator.Send(new AddTeamToEventCommand.Command(request)));
+            var updatedEvent = await _mediator.Send(new AddTeamToEventCommand.Command(request));
+            return Ok(updatedEvent.Adapt<EventDto>());
         }
         
         [Authorize]

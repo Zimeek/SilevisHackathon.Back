@@ -6,5 +6,6 @@ public record EventDto
     public string Name { get; init; }
     public LocationDto Location { get; init; }
     public DateTime Date { get; init; }
-    
+    public ICollection<TeamDto> Teams { get; init; }
+
 }

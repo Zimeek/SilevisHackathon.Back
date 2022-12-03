@@ -21,6 +21,7 @@ public class GetAllTeamsQuery
         public async Task<ICollection<Team>> Handle(Query request, CancellationToken cancellationToken)
         {
             return await _dbContext.Teams
+                .Include(t => t.People)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }

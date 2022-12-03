@@ -13,4 +13,6 @@ public record CreateEventHttpRequest
     public DateTime Date { get; init; }
     [Required]
     public string Time { get; init; }
+    [Required]
+    public int TeamId { get; init; }
 }

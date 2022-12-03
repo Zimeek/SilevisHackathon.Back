@@ -23,7 +23,7 @@ public static class GetUpcomingEventsQuery
             return await _dbContext.Events
                 .Include(e => e.Location)
                 .Where(e => e.Date > DateTime.UtcNow)
-                .OrderByDescending(e => e.Date)
+                .OrderBy(e => e.Date)
                 .Take(10)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);

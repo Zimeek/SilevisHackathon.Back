@@ -1,4 +1,6 @@
+using Ardalis.GuardClauses;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SilevisHackathon.Application.HttpRequests;
 using SilevisHackathon.Domain.Models;
 using SilevisHackathon.Infrastructure.Data;
@@ -23,6 +25,15 @@ public static class CreateEventCommand
             var newEvent = new Event(command.request.Name, command.request.LocationId, command.request.Date, command.request.Time);
             
             await _dbContext.Events.AddAsync(newEvent, cancellationToken);
+
+            var team = await _dbContext.Teams
+                .FirstOrDefaultAsync(t => t.Id == command.request.TeamId);
+
+            Guard.Against.Null(team, nameof(team));
+
+            team.EventId = newEvent.Id;
+            newEvent.Teams.Add(team);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return newEvent;
