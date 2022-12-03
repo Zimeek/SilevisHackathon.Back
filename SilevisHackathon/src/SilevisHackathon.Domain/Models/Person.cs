@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using BC =  BCrypt.Net;
 namespace SilevisHackathon.Domain.Models;
 
@@ -19,6 +20,7 @@ public class Person
     public string Email { get; set; }
     public string PasswordHash { get; set; }
     public int? TeamId { get; set; }
+    [JsonIgnore]
     public Team? Team { get; set; }
     public ICollection<EventMessage> EventMessages { get; set; } = new List<EventMessage>();
     public ICollection<TeamMessage> TeamMessages { get; set; } = new List<TeamMessage>();
