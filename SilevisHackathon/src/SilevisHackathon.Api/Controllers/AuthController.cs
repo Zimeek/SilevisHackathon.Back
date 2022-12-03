@@ -24,8 +24,8 @@ public class AuthController : ControllerBase
         _mediator = mediator;
     }
 
-[HttpPost("Login")]
-    public async Task<IResult> Post([FromBody] UserAuth user)
+    [HttpPost("Login")]
+    public async Task<IActionResult> Post([FromBody] UserAuth user)
     {
         Person person = await _mediator.Send(new GetUserByNameQuery.Query(user.Username));
         if (BC.BCrypt.Verify(user.Password, person.PasswordHash))
@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim("Id", person.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Username),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,
@@ -52,10 +52,9 @@ public class AuthController : ControllerBase
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var jwtToken = tokenHandler.WriteToken(token);
             var stringToken = tokenHandler.WriteToken(token);
-            return Results.Ok(stringToken);
+            return Ok(stringToken);
         }
-        return Results.Unauthorized();
+        return Unauthorized();
     }
 }
