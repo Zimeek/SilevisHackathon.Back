@@ -4,11 +4,11 @@ public class Event
 {
     private Event() {}
 
-    public Event(string name, int locationId, DateTime date)
+    public Event(string name, int locationId, DateTime date, string time)
     {
         Name = name;
         LocationId = locationId;
-        Date = date;
+        Date = date.Add(TimeSpan.Parse(time));
     }
     
     public int Id { get; set; }
