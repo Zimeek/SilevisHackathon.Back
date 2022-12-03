@@ -9,7 +9,6 @@ using SilevisHackathon.Application.Queries;
 
 namespace SilevisHackathon.Api.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EventController : ControllerBase
@@ -48,6 +47,7 @@ namespace SilevisHackathon.Api.Controllers
             return Ok(teams.Adapt<ICollection<TeamDto>>());
         }
         
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateEventAsync([FromBody]CreateEventHttpRequest request)
         {
@@ -57,12 +57,14 @@ namespace SilevisHackathon.Api.Controllers
             return CreatedAtAction(actionName, new { id = newEvent.Id }, newEvent.Adapt<EventDto>());
         }
 
+        [Authorize]
         [HttpPost("AddTeam")]
         public async Task<IActionResult> AddTeamToEventAsync([FromBody]AddTeamToEventHttpRequest request)
         {
             return Ok(await _mediator.Send(new AddTeamToEventCommand.Command(request)));
         }
-
+        
+        [Authorize]
         [HttpDelete("RemoveTeam")]
         public async Task<IActionResult> RemoveTeamFromEventAsync([FromBody]RemoveTeamFromEventHttpRequest request)
         {
