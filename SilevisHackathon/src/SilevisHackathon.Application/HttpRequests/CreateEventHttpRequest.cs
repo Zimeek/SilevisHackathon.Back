@@ -11,4 +11,6 @@ public record CreateEventHttpRequest
     [Required]
     [DataType(DataType.DateTime)]
     public DateTime Date { get; init; }
+    [Required]
+    public string Time { get; init; }
 }

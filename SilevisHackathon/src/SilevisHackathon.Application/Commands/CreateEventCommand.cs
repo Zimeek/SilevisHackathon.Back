@@ -20,7 +20,7 @@ public static class CreateEventCommand
         
         public async Task<Event> Handle(Command command, CancellationToken cancellationToken)
         {
-            var newEvent = new Event(command.request.Name, command.request.LocationId, command.request.Date);
+            var newEvent = new Event(command.request.Name, command.request.LocationId, command.request.Date, command.request.Time);
             
             await _dbContext.Events.AddAsync(newEvent, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
