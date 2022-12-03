@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
             return Forbid();
         if (BC.BCrypt.Verify(request.Password, person.PasswordHash))
         {
-            string token = GenerateJwtToken(person.Id, person.Email);
+            string token = GenerateJwtToken(person);
             return Ok(token);
         }
         return Forbid();
@@ -47,13 +47,13 @@ public class AuthController : ControllerBase
         if (person is null)
         {
             Person newUser = await _mediator.Send(new CreatePersonCommand.Command(request));
-            string token = GenerateJwtToken(newUser.Id, newUser.Email);
+            string token = GenerateJwtToken(newUser);
             return Ok(token);
         }
         return Conflict();
     }
 
-    private string GenerateJwtToken(int id, string email)
+    private string GenerateJwtToken(Person person)
     {
         var issuer = _configuration["jwt:issuer"];
         var audience = _configuration["jwt:audience"];
@@ -63,8 +63,9 @@ public class AuthController : ControllerBase
             Subject = new ClaimsIdentity(new[]
             {
 
-                new Claim("Id", id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim("Id", person.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, person.Email),
+                new Claim("TeamId", person.TeamId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti,
                     Guid.NewGuid().ToString())
             }),
